@@ -1,11 +1,84 @@
-[![Obsolete project](https://jb.gg/badges/obsolete-plastic.svg)](https://github.com/JetBrains#jetbrains-on-github)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-# [Compose Multiplatform](https://github.com/JetBrains/compose-multiplatform) application
+# Отчёт по лабораторной работе (КГ)
 
-This template has been archived.
+Лабораторные работы 6a–6c
 
-* To create Compose Multiplatform projects, use the [Kotlin Multiplatform wizard](https://kmp.jetbrains.com/).
-  Make sure to enable the **Share UI** option.
-* To learn how to build Compose Multiplatform projects, see the [Get started with Compose Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/compose-multiplatform-getting-started.html) tutorial.
+- **Дисциплина**: Компьютерная графика
+- **Тема**: Построение и визуализация 3D-объектов; 3D-преобразования; ортографические проекции
 
-  If you have an idea on how to improve the tutorial, create a pull request to the [documentation repository](https://github.com/JetBrains/kotlin-multiplatform-dev-docs).
+## 1. Цель работы
+
+Закрепить теорию и освоить на практике методы 3D-визуализации: построение каркасной модели, выполнение трёхмерных преобразований (масштабирование, перенос, вращение вокруг произвольной оси) и построение ортографических проекций на плоскость Oxy, Oxz, Oyz.
+
+## 2. Постановка задачи
+
+- **ЛР 6a. Построение и визуализация 3D-объектов**
+  - Сформировать и визуализировать каркасную 3D-модель заданного объекта.
+  - Вариант: 3D-изображение первой буквы фамилии (каркас).
+
+- **ЛР 6b. Реализация трёхмерных преобразований**
+  - Реализовать масштабирование, перенос и вращение вокруг произвольной оси для заданного объекта.
+  - Выводить итоговую матрицу преобразования.
+
+- **ЛР 6c. Построение простейших проекций**
+  - Построить три ортографические проекции объекта на плоскости Oxy, Oxz, Oyz.
+
+## 3. Требования и критерии оценки
+
+- Для задания 3D-объекта используется массив координат вершин (и список рёбер/полигонов для каркаса).
+- Графический интерфейс содержит систему координат и оси.
+- При 3D-преобразованиях выводится итоговая матрица преобразования.
+
+## 4. Краткая реализация проекта
+
+- **Технологии**: Kotlin Multiplatform, Compose Multiplatform (Desktop), Gradle (Kotlin DSL).
+- **Модули**:
+  - `shared` — общий код (алгебра, данные объекта, трансформации, проекции).
+  - `desktopApp` — UI на Compose Desktop (визуализация сцены и элементы управления).
+- **Представление модели**:
+  - Вершины: массив `List<Vector3>`.
+  - Рёбра: пары индексов вершин `List<Pair<Int, Int>>` (каркасная модель).
+- **Трансформации**: матрицы 4×4 (мировая/видовая) — масштабирование, перенос, вращение вокруг произвольной оси (ось задаётся точками или направляющим вектором). Итоговая матрица отображается пользователю.
+- **Проекции**: ортографические на Oxy, Oxz, Oyz (обнуление соответствующей координаты и отображение на 2D-плоскость).
+
+## 5. Интерфейс и управление
+
+- Отображение 3D-сцены с осями координат.
+- Элементы управления (пример): числовые поля/слайдеры масштаба (Sx, Sy, Sz), переноса (Tx, Ty, Tz), вращения (угол, ось), кнопки сброса.
+- Панель/лог для вывода текущей матрицы преобразования.
+
+## 6. Запуск и сборка
+
+- **Требования**: JDK 17+, IntelliJ IDEA/Android Studio; для сборки .exe — PowerShell и интернет при первом запуске Gradle.
+- **Запуск из командной строки**:
+  ```powershell
+  # из папки desktopApp
+  ..\gradlew.bat run
+  ```
+- **Сборка Windows portable .exe**:
+  ```powershell
+  # из корня проекта
+  cd desktopApp
+  ..\gradlew.bat createDistributable
+  ```
+  - Артефакты: `desktopApp/build/compose/binaries/main/app/<имя_папки_приложения>/`
+  - Внутри: `.exe` + `runtime`/ресурсы (portable, запуск без установки)
+  - В этом проекте после сборки: `desktopApp/build/compose/binaries/main/app/KotlinMultiplatformComposeDesktopApplication/KotlinMultiplatformComposeDesktopApplication.exe`
+
+## 7. Структура проекта
+
+```
+my5/
+├─ desktopApp/                 # Compose Desktop приложение
+└─ shared/                     # общий код (модель, матрицы, проекции)
+```
+
+## 8. Результаты
+
+- Построена каркасная 3D-модель (первая буква фамилии).
+- Реализованы масштабирование, перенос, вращение вокруг произвольной оси с выводом итоговой матрицы.
+- Построены ортографические проекции на Oxy, Oxz, Oyz.
+
+## 9. Список литературы / ссылки
+
+- Khronos: OpenGL Mathematics (матрицы и преобразования)
+- Документация Compose Multiplatform
